@@ -1,0 +1,4 @@
+#Sun Mar 05 11:31:13 EST 2023
+base.0=/Users/henrymichels/Software/flutter/samples/stopwatch_v1/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
