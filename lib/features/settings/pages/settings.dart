@@ -15,7 +15,7 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Inject the provider to handle the [DARK MODE] theme
-    final appProvider = Provider.of<AppProvider>(context);
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
     return CustomScaffold(
       appBar: CustomAppBar(
         title: "Settings",
