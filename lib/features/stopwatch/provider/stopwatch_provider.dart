@@ -37,7 +37,7 @@ class TimerService extends ChangeNotifier {
 
   /// Implement the stopwatch [START]
   void startStopwatch() {
-    timer = Timer.periodic(Duration(seconds: 1), updateStopwatch);
+    timer = Timer.periodic(Duration(milliseconds: 100), updateStopwatch);
     stopwatch.start();
 
     notifyListeners();

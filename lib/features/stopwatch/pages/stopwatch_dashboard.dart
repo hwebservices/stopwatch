@@ -1,5 +1,4 @@
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:stopwatch/util/utils.dart';
 import 'package:stopwatch/widgets/app_bar.dart';
 import 'package:stopwatch/widgets/custom_card.dart';
@@ -34,7 +33,6 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
 
   @override
   void dispose() {
-    Hive.close();
     super.dispose();
   }
 
@@ -114,11 +112,17 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
                       child: AnimatedBuilder(
                         animation: timerService,
                         builder: (context, child) {
-                          return CustomText(
-                            text: Utils.fromDuration(
-                                timerService.currentDuration),
-                            fontSize: 90,
-                            fontWeight: FontWeight.bold,
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CustomText(
+                                text: Utils.fromDuration(
+                                    timerService.currentDuration),
+                                fontSize: 95,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ],
                           );
                         },
                       ),
@@ -142,14 +146,15 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
                               setState(() {
                                 timerService.isRunning = true;
                               });
+                              if (laps.isEmpty) {}
                             },
                             child: CustomText(text: 'Start', fontSize: 16))
                         : CustomButtom(
                             onPressed: () {
+                              timerService.stopStopwatch();
                               setState(() {
                                 timerService.isRunning = false;
                               });
-                              timerService.stopStopwatch();
                             },
                             child: CustomText(text: 'Stop', fontSize: 16)),
 
@@ -161,8 +166,7 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
                               setState(() {
                                 timerService.isRunning = true;
                               });
-                              laps.add(Utils.fromDuration(
-                                  timerService.currentDuration));
+                              if (laps.isNotEmpty) {}
                             },
                             child: CustomText(text: 'Lap', fontSize: 16))
                         : CustomButtom(
@@ -171,15 +175,12 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
                                     ? null
                                     : () {
                                         timerService.resetStopwatch();
-                                        laps.clear();
                                         setState(() {
                                           timerService.isRunning = false;
                                         });
+                                        laps.clear();
                                       },
-                            child: CustomText(
-                              text: 'Reset',
-                              fontSize: 16,
-                            ),
+                            child: CustomText(text: 'Reset', fontSize: 16),
                           )
                   ],
                 ),
