@@ -36,6 +36,41 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
     super.dispose();
   }
 
+  Widget buildLapList(dynamic service, int index) {
+    return AnimatedBuilder(
+      animation: service,
+      builder: (context, child) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            color: Theme.of(context).primaryColor,
+            child: ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Lap $index',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    Utils.fromDuration(service.currentDuration),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     /// Inject the initial [PROVIDER] state
@@ -129,6 +164,7 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
 
                 /// Display 4 buttons based on the type of [Dependency] to be inject
@@ -146,7 +182,6 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
                               setState(() {
                                 timerService.isRunning = true;
                               });
-                              if (laps.isEmpty) {}
                             },
                             child: CustomText(text: 'Start', fontSize: 16))
                         : CustomButtom(
@@ -166,7 +201,11 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
                               setState(() {
                                 timerService.isRunning = true;
                               });
-                              if (laps.isNotEmpty) {}
+
+                              laps.add(
+                                Utils.fromDuration(
+                                    timerService.currentDuration),
+                              );
                             },
                             child: CustomText(text: 'Lap', fontSize: 16))
                         : CustomButtom(
@@ -189,54 +228,42 @@ class _HomeStopWatchState extends State<HomeStopWatch> {
             const SizedBox(height: 10),
             Row(
               children: [
-                const IconWithTitle(
-                    title: 'Lap(s)  =>', icon: Icons.timer_sharp),
+                const IconWithTitle(title: 'Lap(s)', icon: Icons.timer_sharp),
                 const SizedBox(width: 10),
-                Text('(Total ${laps.length} )',
-                    style: GoogleFonts.roboto(
-                        fontSize: 18,
-                        color: AppColors.textfieldTitle,
-                        fontWeight: FontWeight.bold)),
               ],
             ),
-            laps.isEmpty
-                ? Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      NoItemsScreen(),
-                    ],
-                  )
-                : ListView.builder(
-                    primary: false,
-                    reverse: true,
-                    shrinkWrap: true,
-                    itemCount: laps.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return CustomCard(
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Lap ${index + 1}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '${laps.elementAt(index)}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+            buildLapList(timerService, 1),
+            ListView.builder(
+              primary: false,
+              reverse: false,
+              shrinkWrap: true,
+              itemCount: laps.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CustomCard(
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Lap ${index + 2}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    },
+                        Text(
+                          '${laps.elementAt(index)}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                );
+              },
+            ),
           ],
         ),
       ),
